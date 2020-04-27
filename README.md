@@ -1,3 +1,4 @@
 # NLP
 
-This is a course repository for the course on Natural Language Processing.
+This is a course repository for the course on Hands-on NLP with NLTK and Scikit-learn.
+
