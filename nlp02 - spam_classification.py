@@ -2,7 +2,7 @@ import collections
 import nltk
 import os
 import random
-
+nltk.download('wordnet')
 
 # Define some stop words
 stop_words = {
@@ -23,6 +23,7 @@ stop_words = {
 
 
 def load_files(directory):
+    '''Function to load files into variable'''
     result = []
     for fname in os.listdir(directory):
         with open(directory + '/' + fname, 'r', encoding='ISO-8859-1') as f:
@@ -31,19 +32,27 @@ def load_files(directory):
 
 
 def preprocess_sentence(sentence):
+    '''Function is used to tokenize, lemmatize, and remove stop words'''
+    
     lemmatizer = nltk.WordNetLemmatizer()
+    
     # clearly list out our preprocessing pipeline
     processed_tokens = nltk.word_tokenize(sentence)
     processed_tokens = [w.lower() for w in processed_tokens]
+    
     # find least common elements
     word_counts = collections.Counter(processed_tokens)
     uncommon_words = word_counts.most_common()[:-10:-1]
+    
     # remove these tokens
     processed_tokens = [w for w in processed_tokens if w not in stop_words]
     processed_tokens = [w for w in processed_tokens if w not in uncommon_words]
+    
     # lemmatize
     processed_tokens = [lemmatizer.lemmatize(w) for w in processed_tokens]
+    
     return processed_tokens
+
 
 
 def feature_extraction(tokens):
@@ -57,11 +66,12 @@ def train_test_split(dataset, train_size=0.8):
 
 
 
-positive_examples = load_files('./enron/spam')
-negative_examples = load_files('./enron/ham')
+
+positive_examples = load_files('enron/spam')
+negative_examples = load_files('enron/ham')
 
 
-# Label the examples
+# We first preprocess and then label the examples
 positive_examples = [preprocess_sentence(email) for email in positive_examples]
 negative_examples = [preprocess_sentence(email) for email in negative_examples]
 
@@ -72,11 +82,18 @@ random.shuffle(all_examples)
 
 print('{} emails processed.'.format(len(all_examples)))
 
+
+
+# Feature Extraaction using Bag of words (BOW)
 featurized = [(feature_extraction(corpus), label)
               for corpus, label in all_examples]
 
+
+# Train-test-split (70 % Train, 30 % Test)
 training_set, test_set = train_test_split(featurized, train_size=0.7)
 
+
+# Basic Spam Classification using Naive Bayes
 model = nltk.classify.NaiveBayesClassifier.train(training_set)
 training_error = nltk.classify.accuracy(model, training_set)
 print('Model training complete. Accuracy on training set: {}'.format(
