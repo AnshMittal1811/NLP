@@ -56,8 +56,10 @@ def train_test_split(dataset, train_size=0.8):
     return dataset[:num_training_examples], dataset[num_training_examples:]
 
 
-positive_examples = load_files('enron/spam')
-negative_examples = load_files('enron/ham')
+
+positive_examples = load_files('./enron/spam')
+negative_examples = load_files('./enron/ham')
+
 
 # Label the examples
 positive_examples = [preprocess_sentence(email) for email in positive_examples]
@@ -82,3 +84,4 @@ print('Model training complete. Accuracy on training set: {}'.format(
 
 testing_error = nltk.classify.accuracy(model, test_set)
 print('Accuracy on test set: {}'.format(testing_error))
+
