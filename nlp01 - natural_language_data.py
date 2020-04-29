@@ -11,7 +11,7 @@ import multiprocessing as mp
 import re  
 
 
-# 1.1 Reading a simple natural language file into memory
+# 1.2 Reading a simple natural language file into memory
 def process(line):
     print(line)
 
@@ -71,8 +71,11 @@ word_regex_improved = r"(\w[\w']*\w|\w)"
 word_matcher = re.compile(word_regex_improved)
 print(word_matcher.findall(corpus))
 
+
+
 ##-------------------------------------------------------
 # 1.4 Converting words into lists of lower case tokens
+
 def split_into_words(line):
     word_regex_improved = r"(\w[\w']*\w|\w)"
     word_matcher = re.compile(word_regex_improved)
@@ -96,7 +99,7 @@ print(processed_corpus)
 word_counts = collections.Counter(processed_corpus)
 print(word_counts)
 
-# Define some stop words
+# Define some stop words (can use nltk to define stop words as well)
 stop_words = {
     'ourselves', 'hers', 'between', 'yourself', 'but', 'again',
     'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they',
