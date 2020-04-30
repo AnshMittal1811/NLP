@@ -31,15 +31,18 @@ def extract_features(corpus):
         ngram_range=(1, 2),
         stop_words=sa_stop_words
     )
+    
     processed_corpus = count_vectorizer.fit_transform(corpus)
+    
     processed_corpus = feature_extraction.text.TfidfTransformer().fit_transform(
         processed_corpus)
 
     return processed_corpus
 
 
-data_directory = 'movie_reviews'
+data_directory = 'movie reviews'
 movie_sentiment_data = datasets.load_files(data_directory, shuffle=True)
+
 print('{} files loaded.'.format(len(movie_sentiment_data.data)))
 print('They contain the following classes: {}.'.format(
     movie_sentiment_data.target_names))
@@ -50,27 +53,34 @@ X_train, X_test, y_train, y_test = model_selection.train_test_split(
     movie_tfidf, movie_sentiment_data.target, test_size=0.30, random_state=42)
 
 # similar to nltk.NaiveBayesClassifier.train()
+# logistic Regression
 clf1 = linear_model.LogisticRegression()
 clf1.fit(X_train, y_train)
 print('Logistic Regression performance: {}'.format(clf1.score(X_test, y_test)))
 
+
+# SGD Classiifier
 clf2 = linear_model.SGDClassifier()
 clf2.fit(X_train, y_train)
 print('SGDClassifier performance: {}'.format(clf2.score(X_test, y_test)))
 
+# Multinomial NB
 clf3 = naive_bayes.MultinomialNB()
 clf3.fit(X_train, y_train)
 print('MultinomialNB performance: {}'.format(clf3.score(X_test, y_test)))
 
+# Bernoulli NB
 clf4 = naive_bayes.BernoulliNB()
 clf4.fit(X_train, y_train)
 print('BernoulliNB performance: {}'.format(clf4.score(X_test, y_test)))
 
 
+# Voting Model from 4 earlier models
 voting_model = ensemble.VotingClassifier(
     estimators=[('lr', clf1), ('sgd', clf2), ('mnb', clf3), ('bnb', clf4)],
     voting='hard')
+
 voting_model.fit(X_train, y_train)
+
 print('Voting classifier performance: {}'.format(
     voting_model.score(X_test, y_test)))
-
