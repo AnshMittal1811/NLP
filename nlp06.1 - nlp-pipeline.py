@@ -1,4 +1,6 @@
 import nltk
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
 
 
 corpus = [
@@ -16,6 +18,7 @@ corpus = [
 
 
 def pipeline(f):
+    
     '''pipeline decorator that calls next() on function f()'''
     def start_pipeline(*args, **kwargs):
         nf = f(*args, **kwargs)
@@ -74,6 +77,7 @@ def printline(title):
         line = (yield)
         print(title)
         print(line)
+
 
 ingest(corpus, [
     tokenize_sentences([
